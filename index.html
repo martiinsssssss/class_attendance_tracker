@@ -2,346 +2,539 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Control de faltas de clase</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mis faltas · Control de faltas de clase</title>
 <meta name="description" content="Lleva la cuenta de tus horas de falta por seminario, sin salir del límite del 20%.">
+<meta name="theme-color" content="#F5F4FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121118" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
+  /* ============================ Colores ============================ */
   :root {
-    --color-bg: #f5f6f8;
-    --color-surface: #ffffff;
-    --color-surface-2: #f0f1f4;
-    --color-text: #1b1f24;
-    --color-muted: #5b6472;
-    --color-border: #d7dce2;
-    --color-primary: #2563eb;
-    --color-primary-contrast: #ffffff;
-    --color-danger: #dc2626;
-    --color-danger-bg: #fee2e2;
-    --color-focus: #2563eb;
-    --status-good: #2563eb;
-    --status-good-bg: #dbeafe;
-    --status-near: #a16207;
-    --status-near-bg: #fef3c7;
-    --status-nomargin: #c2410c;
-    --status-nomargin-bg: #ffedd5;
-    --status-exceeded: #dc2626;
-    --status-exceeded-bg: #fee2e2;
-    --radius: 10px;
+    color-scheme: light;
+    --bg: #F5F4FA;
+    --surface: #FFFFFF;
+    --surface-2: #F0EFF6;
+    --line: #E2E0EC;
+    --ink: #1C1A2E;
+    --ink-2: #4B4862;
+    --muted: #625F78;
+    --accent: #5847D6;
+    --accent-ink: #3F31A8;
+    --accent-soft: #ECEAFB;
+    --accent-track: #E3E0F8;
+    --accent-mid: #A99FEC;
+    --accent-shadow: rgba(88, 71, 214, 0.32);
+    --on-accent: #FFFFFF;
+    --near: #E39B0B;
+    --near-ink: #6E4600;
+    --near-soft: #FBEFCF;
+    --near-mid: #F1CC7F;
+    --nomargin: #EA6A2A;
+    --nomargin-ink: #93380C;
+    --nomargin-soft: #FDE3D6;
+    --nomargin-mid: #F4AE8A;
+    --over: #C9302C;
+    --over-ink: #8F1D1A;
+    --over-soft: #F9DAD9;
+    --over-mid: #E48E8B;
+    --danger-soft: #FCE8E7;
+    --focus: #5847D6;
+    --shadow: 0 1px 3px rgba(28, 26, 46, 0.07);
+    --backdrop: rgba(18, 16, 32, 0.45);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-bg: #0f1318;
-      --color-surface: #1a1f26;
-      --color-surface-2: #20262e;
-      --color-text: #e7eaee;
-      --color-muted: #9aa5b1;
-      --color-border: #323a44;
-      --color-primary: #60a5fa;
-      --color-primary-contrast: #0f1318;
-      --color-danger: #f87171;
-      --color-danger-bg: #3a1a1a;
-      --color-focus: #60a5fa;
-      --status-good: #60a5fa;
-      --status-good-bg: #1e3a5f;
-      --status-near: #fbbf24;
-      --status-near-bg: #4a3b12;
-      --status-nomargin: #fb923c;
-      --status-nomargin-bg: #4a2e12;
-      --status-exceeded: #f87171;
-      --status-exceeded-bg: #4a1414;
+      color-scheme: dark;
+      --bg: #121118;
+      --surface: #1D1B27;
+      --surface-2: #282536;
+      --line: #353148;
+      --ink: #F1EFF8;
+      --ink-2: #CBC7DD;
+      --muted: #A9A5BD;
+      --accent: #9A8DF7;
+      --accent-ink: #C9C1FF;
+      --accent-soft: #2D2856;
+      --accent-track: #2E2A4B;
+      --accent-mid: #5E53B5;
+      --accent-shadow: rgba(0, 0, 0, 0.45);
+      --on-accent: #15122B;
+      --near: #F0B23B;
+      --near-ink: #F6CB74;
+      --near-soft: #3A2E12;
+      --near-mid: #8A6A22;
+      --nomargin: #F2844C;
+      --nomargin-ink: #F8A97F;
+      --nomargin-soft: #3D2216;
+      --nomargin-mid: #8E4B2B;
+      --over: #F06A62;
+      --over-ink: #F79C96;
+      --over-soft: #3D1A1A;
+      --over-mid: #8C3D39;
+      --danger-soft: #36191B;
+      --focus: #9A8DF7;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --backdrop: rgba(0, 0, 0, 0.6);
     }
   }
+
+  /* ============================ Base ============================ */
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  [hidden] { display: none !important; }
+  html { -webkit-text-size-adjust: 100%; }
   body {
-    background: var(--color-bg);
-    color: var(--color-text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.45;
-    overflow-x: hidden;
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Nunito", ui-rounded, system-ui, -apple-system, "Segoe UI", sans-serif;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
   }
-  a { color: var(--color-primary); }
-  h1, h2, h3, h4 { line-height: 1.25; }
-  .wrap {
-    max-width: 1200px;
+  body.sheet-open { overflow: hidden; }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  a { color: var(--accent-ink); }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+  .visually-hidden {
+    position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  svg { flex-shrink: 0; }
+
+  .app {
+    max-width: 1040px;
     margin: 0 auto;
-    padding: 0 16px 48px;
+    padding: 0 16px calc(128px + env(safe-area-inset-bottom));
   }
-  header.site-header {
-    padding: 20px 16px 12px;
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: flex-start;
-    justify-content: space-between;
+
+  /* ============================ Cabecera ============================ */
+  .top {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: calc(20px + env(safe-area-inset-top)) 0 14px;
   }
-  header.site-header h1 { margin: 0 0 4px; font-size: 1.4rem; }
-  header.site-header p { margin: 0; color: var(--color-muted); font-size: 0.92rem; max-width: 56ch; }
-  button, input, select, textarea { font-family: inherit; }
-  input, select, textarea {
-    font-size: 16px;
-    padding: 10px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: 8px;
-    background: var(--color-surface);
-    color: var(--color-text);
-    width: 100%;
+  .eyebrow { margin: 0; font-size: 13px; font-weight: 700; color: var(--muted); }
+  h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -0.01em; line-height: 1.15; }
+  h2 { margin: 0; }
+  .icon-btn {
+    width: 44px; height: 44px; border-radius: 22px; border: 0;
+    background: var(--surface); color: var(--ink);
+    display: grid; place-items: center; box-shadow: var(--shadow);
   }
-  label { display: block; font-weight: 600; font-size: 0.88rem; margin-bottom: 4px; }
-  .field { margin-bottom: 14px; }
-  .field-hint { color: var(--color-muted); font-size: 0.8rem; margin-top: 4px; }
-  button {
-    cursor: pointer;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-text);
-    border-radius: 8px;
-    padding: 10px 16px;
-    min-height: 44px;
-    font-size: 0.95rem;
-    font-weight: 600;
+
+  .view { display: flex; flex-direction: column; gap: 16px; }
+  .view[hidden] { display: none; }
+
+  /* ============================ Resumen ============================ */
+  .counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  .count {
+    background: var(--surface); border-radius: 16px; padding: 12px 4px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: var(--shadow);
   }
-  button.primary {
-    background: var(--color-primary);
-    border-color: var(--color-primary);
-    color: var(--color-primary-contrast);
+  .count .dot { width: 10px; height: 10px; border-radius: 5px; }
+  .count .n { font-size: 24px; font-weight: 900; line-height: 1.1; }
+  .count .l { font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; line-height: 1.2; }
+
+  .alert {
+    display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px;
+    font-size: 13.5px; font-weight: 700; line-height: 1.35;
   }
-  button.danger { color: var(--color-danger); border-color: var(--color-danger); background: transparent; }
-  button.ghost { background: transparent; }
-  button.small { min-height: 38px; padding: 6px 12px; font-size: 0.85rem; }
-  button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-    outline: 3px solid var(--color-focus);
-    outline-offset: 2px;
+  .alert.danger { background: var(--danger-soft); color: var(--over-ink); }
+  .alert.warn { background: var(--near-soft); color: var(--near-ink); }
+  .alert .alert-btn {
+    margin-left: auto; flex-shrink: 0; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 0;
+    background: var(--surface); color: var(--ink); font-size: 13px; font-weight: 800;
   }
-  .quick-hours { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
-  .quick-hours button { flex: 0 0 auto; min-width: 44px; padding: 8px 10px; }
-  section.card, .card {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 20px;
+  .banner { margin-top: 12px; }
+
+  .segmented {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px;
+    padding: 4px; border-radius: 14px; background: var(--surface-2);
   }
-  .layout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .segmented button {
+    height: 40px; border: 0; border-radius: 10px; background: transparent;
+    color: var(--ink-2); font-size: 14px; font-weight: 800;
   }
-  .col-left, .col-right { display: flex; flex-direction: column; min-width: 0; }
-  .full-width { grid-column: 1 / -1; }
-  @media (min-width: 960px) {
-    .layout { grid-template-columns: 1fr 1fr; }
+  .segmented button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.14); }
+
+  /* ============================ Seminarios ============================ */
+  .module { display: flex; flex-direction: column; gap: 10px; }
+  .module-title { margin: 6px 4px 0; font-size: 15px; font-weight: 900; display: flex; align-items: center; gap: 8px; line-height: 1.25; }
+  .tag {
+    display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+    min-width: 30px; height: 24px; padding: 0 6px; border-radius: 8px;
+    background: var(--accent-soft); color: var(--accent-ink); font-size: 12px; font-weight: 900;
   }
-  h2.section-title { font-size: 1.05rem; margin: 0 0 12px; }
-  .summary-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0,1fr));
-    gap: 10px;
+  .module-note { margin: 0 4px; font-size: 12.5px; font-weight: 600; color: var(--muted); }
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (min-width: 600px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 900px) { .tiles { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+  .st-none     { --c: var(--accent);   --c-track: var(--accent-track); --c-ink: var(--ink-2);        --c-soft: var(--surface-2);     --c-mid: var(--accent-mid); }
+  .st-good     { --c: var(--accent);   --c-track: var(--accent-track); --c-ink: var(--accent-ink);   --c-soft: var(--accent-soft);   --c-mid: var(--accent-mid); }
+  .st-near     { --c: var(--near);     --c-track: var(--near-soft);    --c-ink: var(--near-ink);     --c-soft: var(--near-soft);     --c-mid: var(--near-mid); }
+  .st-nomargin { --c: var(--nomargin); --c-track: var(--nomargin-soft);--c-ink: var(--nomargin-ink); --c-soft: var(--nomargin-soft); --c-mid: var(--nomargin-mid); }
+  .st-exceeded { --c: var(--over);     --c-track: var(--over-soft);    --c-ink: var(--over-ink);     --c-soft: var(--over-soft);     --c-mid: var(--over-mid); }
+
+  .tile {
+    width: 100%; border: 0; border-radius: 20px; padding: 16px 10px 14px;
+    background: var(--surface); color: var(--ink); box-shadow: var(--shadow);
+    display: flex; flex-direction: column; align-items: center; gap: 9px; text-align: center;
+    transition: transform 0.12s ease;
   }
-  @media (min-width: 480px) {
-    .summary-grid { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .tile:active { transform: scale(0.98); }
+  .ring { position: relative; display: block; flex-shrink: 0; }
+  .ring svg { display: block; }
+  .ring-track { stroke: var(--c-track); }
+  .ring-prog { stroke: var(--c); }
+  .ring-new { stroke: var(--c-mid); }
+  .ring .center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  .ring .big { font-size: 23px; font-weight: 900; line-height: 1; }
+  .ring .big.colored { color: var(--c-ink); }
+  .ring .small { font-size: 11px; font-weight: 800; color: var(--muted); margin-top: 3px; }
+  .tile .name { font-size: 14px; font-weight: 800; line-height: 1.25; overflow-wrap: anywhere; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px; padding: 4px 9px; border-radius: 999px;
+    background: var(--c-soft); color: var(--c-ink); font-size: 12px; font-weight: 800; line-height: 1.2;
   }
-  .summary-stat {
-    background: var(--color-surface-2);
-    border-radius: 8px;
-    padding: 10px 12px;
+  .tile .used { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .tp-pill {
+    padding: 5px 9px; border-radius: 10px; background: var(--danger-soft); color: var(--over-ink);
+    font-size: 11.5px; font-weight: 800; line-height: 1.3;
   }
-  .summary-stat .num { font-size: 1.3rem; font-weight: 700; display: block; }
-  .summary-stat .label { color: var(--color-muted); font-size: 0.78rem; }
-  #previewBox {
-    margin-top: 10px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    background: var(--color-surface-2);
-    font-size: 0.9rem;
+
+  /* ============================ Listas de faltas ============================ */
+  .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 6px 4px 0; }
+  .section-head h2 { font-size: 16px; font-weight: 900; }
+  .link-btn { background: none; border: 0; padding: 8px 0; color: var(--accent-ink); font-size: 14px; font-weight: 800; }
+  .rows { display: flex; flex-direction: column; gap: 8px; }
+  .row {
+    width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px 14px; border: 0; border-radius: 16px;
+    background: var(--surface); color: var(--ink); text-align: left; box-shadow: var(--shadow);
   }
-  #previewBox.warn { background: var(--status-near-bg); color: var(--status-near); }
-  #previewBox.danger { background: var(--status-exceeded-bg); color: var(--status-exceeded); }
-  #previewBox.ok { background: var(--status-good-bg); color: var(--status-good); }
-  .module-block { margin-bottom: 18px; }
-  .module-block h3 { font-size: 0.95rem; margin: 0 0 8px; color: var(--color-muted); text-transform: none; }
-  .seminar-card { border: 1px solid var(--color-border); border-radius: 8px; padding: 12px; margin-bottom: 10px; }
-  .seminar-card .row-top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; flex-wrap: wrap; }
-  .seminar-card .seminar-name { font-weight: 600; }
-  .seminar-card .status-line { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; margin-top: 4px; }
-  .meter-track {
-    height: 10px;
-    border-radius: 6px;
-    margin-top: 8px;
-    overflow: hidden;
-    background: var(--color-surface-2);
+  .row .avatar {
+    width: 40px; height: 40px; border-radius: 20px; flex-shrink: 0;
+    display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink);
+    font-size: 13px; font-weight: 900;
   }
-  .meter-track .meter-fill { height: 100%; border-radius: 6px; }
-  .status-good .meter-track { background: var(--status-good-bg); }
-  .status-good .meter-fill { background: var(--status-good); }
-  .status-near .meter-track { background: var(--status-near-bg); }
-  .status-near .meter-fill { background: var(--status-near); }
-  .status-nomargin .meter-track { background: var(--status-nomargin-bg); }
-  .status-nomargin .meter-fill { background: var(--status-nomargin); }
-  .status-exceeded .meter-track { background: var(--status-exceeded-bg); }
-  .status-exceeded .meter-fill { background: var(--status-exceeded); }
-  .seminar-card .meta-line { font-size: 0.82rem; color: var(--color-muted); margin-top: 6px; }
-  .seminar-card .obligatory-line { font-size: 0.82rem; margin-top: 6px; }
-  .seminar-card .obligatory-line.has-missed { color: var(--color-danger); font-weight: 600; }
-  .seminar-card .see-link { font-size: 0.82rem; }
-  .shared-note { font-size: 0.85rem; color: var(--color-muted); border: 1px dashed var(--color-border); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; }
-  table.history-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-  table.history-table th, table.history-table td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
-  table.history-table th { color: var(--color-muted); font-weight: 600; font-size: 0.78rem; text-transform: uppercase; }
-  .tag-obligatory { display: inline-block; background: var(--color-danger-bg); color: var(--color-danger); border-radius: 6px; padding: 1px 6px; font-size: 0.72rem; font-weight: 700; margin-left: 6px; }
-  .history-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .history-filter { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; margin-bottom: 12px; }
-  .history-filter .field { margin-bottom: 0; flex: 1 1 220px; }
-  .empty-state { text-align: center; padding: 30px 10px; color: var(--color-muted); }
-  .data-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
-  .data-note { font-size: 0.85rem; color: var(--color-muted); margin-top: 10px; }
-  .backup-warning { background: var(--status-near-bg); color: var(--status-near); border-radius: 8px; padding: 10px 12px; font-size: 0.85rem; margin-bottom: 12px; }
-  #toast {
-    position: fixed;
-    bottom: 16px;
-    left: 16px;
-    right: 16px;
-    max-width: 420px;
-    margin: 0 auto;
-    background: var(--color-text);
-    color: var(--color-bg);
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: none;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-    z-index: 50;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+  .row .avatar.tp { background: var(--danger-soft); color: var(--over-ink); }
+  .row .txt { display: flex; flex-direction: column; min-width: 0; flex-grow: 1; }
+  .row .t1 { font-size: 14.5px; font-weight: 800; line-height: 1.3; overflow-wrap: anywhere; }
+  .row .t2 { font-size: 12.5px; font-weight: 600; color: var(--muted); overflow-wrap: anywhere; }
+  .row .hours { font-size: 15px; font-weight: 900; white-space: nowrap; }
+  .row .chev { color: var(--muted); }
+  .tp-tag {
+    display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 6px; vertical-align: 1px;
+    background: var(--danger-soft); color: var(--over-ink); font-size: 11px; font-weight: 900;
   }
-  #toast.visible { display: flex; }
-  #toast button { background: transparent; border: 1px solid var(--color-bg); color: var(--color-bg); min-height: 36px; }
-  #globalBanner { margin: 0 16px 0; max-width: 1200px; }
-  #globalBanner:not(:empty) { margin-bottom: 4px; }
-  .banner-item { background: var(--color-danger-bg); color: var(--color-danger); border-radius: 8px; padding: 10px 14px; margin: 10px auto 0; max-width: 1200px; font-size: 0.88rem; }
-  footer.site-footer { text-align: center; padding: 24px 16px 40px; color: var(--color-muted); font-size: 0.82rem; }
-  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  fieldset { border: none; padding: 0; margin: 0 0 14px; }
-  fieldset legend { font-weight: 600; font-size: 0.88rem; margin-bottom: 6px; padding: 0; }
-  .radio-row { display: flex; gap: 16px; flex-wrap: wrap; }
-  .radio-row label { display: flex; align-items: center; gap: 6px; font-weight: 400; margin-bottom: 0; }
-  .radio-row input { width: auto; }
-  form .form-buttons { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+  .empty {
+    padding: 28px 16px; border-radius: 20px; background: var(--surface); box-shadow: var(--shadow);
+    text-align: center; color: var(--muted); font-weight: 700;
+  }
+
+  /* ============================ Historial y copia ============================ */
+  .field { display: flex; flex-direction: column; gap: 8px; }
+  .field-label, legend { padding: 0; font-size: 13px; font-weight: 900; color: var(--ink-2); }
+  legend { margin-bottom: 8px; }
+  fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+  .control {
+    width: 100%; height: 52px; padding: 0 14px; border-radius: 16px; border: 2px solid transparent;
+    background: var(--surface-2); color: var(--ink); font-size: 16px; font-weight: 800;
+  }
+  .control.on-surface { background: var(--surface); box-shadow: var(--shadow); }
+  .control:focus-visible { outline: none; border-color: var(--focus); }
+  .history-meta { margin: -6px 4px 0; font-size: 13px; font-weight: 700; color: var(--muted); }
+
+  .card { background: var(--surface); border-radius: 20px; padding: 18px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 12px; }
+  .card h2 { font-size: 17px; font-weight: 900; }
+  .card p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .card .note { font-size: 13px; color: var(--muted); }
+  .data-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .btn-secondary {
+    min-height: 48px; padding: 8px 12px; border: 0; border-radius: 14px;
+    background: var(--surface-2); color: var(--ink); font-size: 14px; font-weight: 800; line-height: 1.2;
+  }
+  .btn-secondary.strong { background: var(--accent-soft); color: var(--accent-ink); }
+  .btn-danger-text {
+    align-self: flex-start; min-height: 44px; padding: 0 2px; border: 0; background: none;
+    color: var(--over-ink); font-size: 14px; font-weight: 800;
+  }
+  .footer { padding: 8px 4px 0; text-align: center; font-size: 12.5px; color: var(--muted); }
+
+  /* ============================ Barra inferior ============================ */
+  .bottom-nav {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+    background: var(--surface); border-radius: 24px 24px 0 0;
+    box-shadow: 0 -2px 14px rgba(28, 26, 46, 0.08);
+    padding: 0 8px calc(10px + env(safe-area-inset-bottom));
+  }
+  .bottom-nav .inner { max-width: 520px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end; }
+  @media (min-width: 700px) {
+    .bottom-nav { left: 50%; right: auto; bottom: 16px; width: 440px; transform: translateX(-50%); border-radius: 24px; padding-bottom: 10px; box-shadow: 0 6px 24px rgba(28, 26, 46, 0.14); }
+    .toast { bottom: 120px; }
+  }
+  .nav-btn {
+    min-height: 60px; padding: 10px 0 2px; border: 0; background: none;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 4px;
+    color: var(--ink-2); font-size: 12px; font-weight: 800;
+  }
+  .nav-btn[aria-current="page"] { color: var(--accent-ink); font-weight: 900; }
+  .nav-btn:focus-visible { outline-offset: -3px; border-radius: 14px; }
+  .nav-btn.fab-btn { gap: 4px; color: var(--ink); font-weight: 900; }
+  .fab {
+    width: 64px; height: 64px; margin-top: -34px; border-radius: 32px; display: grid; place-items: center;
+    background: var(--accent); color: var(--on-accent); border: 4px solid var(--bg);
+    box-shadow: 0 8px 20px var(--accent-shadow);
+  }
+
+  /* ============================ Hoja (apuntar / editar) ============================ */
+  dialog.sheet {
+    border: 0; padding: 0; margin: auto auto 0; width: 100%; max-width: 100%;
+    max-height: 94vh; max-height: 94dvh; overflow-y: auto; overscroll-behavior: contain;
+    border-radius: 28px 28px 0 0; background: var(--surface); color: var(--ink);
+  }
+  dialog.sheet::backdrop { background: var(--backdrop); }
+  @media (min-width: 700px) {
+    dialog.sheet { margin: auto; max-width: 520px; border-radius: 28px; }
+  }
+  .sheet-body { padding: 10px 16px calc(22px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 16px; }
+  .sheet-body.with-actions { padding-bottom: 0; }
+  .sheet-actions {
+    position: sticky; bottom: 0; z-index: 1; margin: 0 -16px; padding: 12px 16px calc(14px + env(safe-area-inset-bottom));
+    background: var(--surface); display: flex; flex-direction: column; align-items: stretch; gap: 2px;
+    box-shadow: 0 -10px 14px -12px rgba(0, 0, 0, 0.35);
+  }
+  .grabber { align-self: center; width: 40px; height: 5px; border-radius: 3px; background: var(--line); }
+  .sheet-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .sheet-head h2 { font-size: 24px; font-weight: 900; }
+  .sheet-head .icon-btn { background: var(--surface-2); box-shadow: none; }
+
+  .opts { display: grid; gap: 4px; padding: 4px; border-radius: 16px; background: var(--surface-2); }
+  .opts.c3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .opt { position: relative; display: block; }
+  .opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .opt span {
+    display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 8px; border-radius: 12px;
+    color: var(--ink-2); font-size: 15px; font-weight: 800; text-align: center;
+  }
+  .opt input:checked + span { background: var(--accent); color: var(--on-accent); font-weight: 900; }
+  .opt input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+  .type-opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .type-opts .opt span { min-height: 50px; border-radius: 16px; border: 2px solid var(--surface-2); color: var(--ink); line-height: 1.2; }
+  .type-opts .opt input:checked + span { border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+  .type-opts .opt.tp input:checked + span { border-color: var(--over); background: var(--danger-soft); color: var(--over-ink); }
+
+  .hour-opts { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .hour-opts .opt span { min-height: 52px; border-radius: 26px; background: var(--surface-2); color: var(--ink); font-size: 16px; font-weight: 900; }
+  .hour-input {
+    width: 100%; height: 52px; border-radius: 26px; border: 2px dashed var(--line); background: var(--surface);
+    text-align: center; font-size: 16px; font-weight: 800; color: var(--ink); padding: 0 4px;
+  }
+  .hour-input:focus-visible { outline: none; border-style: solid; border-color: var(--focus); }
+  .hour-input.filled { border-style: solid; border-color: var(--accent); background: var(--accent-soft); color: var(--accent-ink); }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips .opt span { min-height: 40px; padding: 0 14px; border-radius: 999px; background: var(--surface-2); color: var(--ink); font-size: 14px; }
+  .chips .opt input:checked + span { background: var(--accent-soft); color: var(--accent-ink); box-shadow: inset 0 0 0 2px var(--accent); }
+
+  .preview { display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 20px; background: var(--bg); }
+  .preview p { margin: 0; font-size: 14.5px; font-weight: 700; line-height: 1.4; }
+  .preview strong { color: var(--c-ink); }
+  .preview.is-alert { background: var(--danger-soft); color: var(--over-ink); }
+  .preview .warn-icon { width: 48px; height: 48px; border-radius: 24px; display: grid; place-items: center; background: var(--surface); color: var(--over); flex-shrink: 0; }
+
+  .btn-primary {
+    width: 100%; height: 58px; border: 0; border-radius: 29px;
+    background: var(--accent); color: var(--on-accent); font-size: 17px; font-weight: 900;
+    box-shadow: 0 8px 20px var(--accent-shadow);
+  }
+  .btn-danger-solid {
+    width: 100%; min-height: 54px; border: 0; border-radius: 27px;
+    background: var(--over); color: #FFFFFF; font-size: 16px; font-weight: 900;
+  }
+  @media (prefers-color-scheme: dark) { .btn-danger-solid { color: #2A0B0A; } }
+  .btn-plain { width: 100%; min-height: 50px; border: 0; border-radius: 25px; background: var(--surface-2); color: var(--ink); font-size: 16px; font-weight: 800; }
+
+  /* ============================ Aviso flotante ============================ */
+  .toast {
+    position: fixed; left: 16px; right: 16px; bottom: calc(104px + env(safe-area-inset-bottom)); z-index: 30;
+    max-width: 420px; margin: 0 auto; padding: 12px 14px; border-radius: 16px;
+    background: var(--ink); color: var(--bg); font-weight: 700; font-size: 14px;
+    display: none; align-items: center; justify-content: space-between; gap: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+  .toast.visible { display: flex; }
+  .toast button { flex-shrink: 0; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 0; background: var(--bg); color: var(--ink); font-weight: 900; }
+
+  @media (prefers-reduced-motion: reduce) { .tile { transition: none; } }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <div>
-    <h1>Control de faltas de clase</h1>
-    <p>Apunta tus faltas por seminario y mira cuánto margen te queda antes del límite del 20&nbsp;%. Tus datos se guardan solo en este navegador.</p>
-  </div>
-  <button id="shareBtn" type="button">Compartir</button>
-</header>
-
-<div id="globalBanner" aria-live="polite"></div>
-
-<main class="wrap">
-  <div class="layout">
-    <div class="col-left">
-      <section class="card" id="summary-section" aria-labelledby="summary-heading">
-        <h2 class="section-title" id="summary-heading">Resumen</h2>
-        <div class="summary-grid" id="summaryGrid"></div>
-      </section>
-
-      <section class="card" id="form-section" aria-labelledby="form-heading">
-        <h2 class="section-title" id="form-heading">Apuntar una falta</h2>
-        <form id="absenceForm" novalidate>
-          <input type="hidden" id="editingId" value="">
-          <div class="field">
-            <label for="dateInput">Fecha</label>
-            <input type="date" id="dateInput" required>
-          </div>
-          <div class="field">
-            <label for="seminarSelect">Seminario</label>
-            <select id="seminarSelect" required></select>
-          </div>
-          <div class="field">
-            <label for="hoursInput">Horas</label>
-            <input type="text" id="hoursInput" inputmode="decimal" placeholder="Ej: 1,5" required aria-describedby="hoursHint">
-            <div class="quick-hours" aria-label="Horas rápidas">
-              <button type="button" class="small" data-quick="1">1 h</button>
-              <button type="button" class="small" data-quick="2">2 h</button>
-              <button type="button" class="small" data-quick="3">3 h</button>
-              <button type="button" class="small" data-quick="4">4 h</button>
-            </div>
-            <div class="field-hint" id="hoursHint">Acepta coma o punto decimal, por ejemplo 1,5 o 1.5.</div>
-          </div>
-          <fieldset id="obligatoryFieldset" hidden>
-            <legend>Tipo de clase (solo Fonaments)</legend>
-            <div class="radio-row">
-              <label><input type="radio" name="obligatory" value="no" checked> Clase normal</label>
-              <label><input type="radio" name="obligatory" value="si"> Teoricopràctica (obligatoria)</label>
-            </div>
-          </fieldset>
-          <div class="field">
-            <label for="reasonInput">Motivo (opcional)</label>
-            <input type="text" id="reasonInput" list="reasonSuggestions" maxlength="200" placeholder="Ej: Cita médica">
-            <datalist id="reasonSuggestions">
-              <option value="Enfermedad">
-              <option value="Cita médica">
-              <option value="Trabajo">
-              <option value="Transporte">
-              <option value="Prácticas">
-              <option value="Asuntos personales">
-              <option value="Otro">
-            </datalist>
-          </div>
-          <div id="previewBox" aria-live="polite">Rellena el formulario para ver el efecto de la falta.</div>
-          <div class="form-buttons">
-            <button type="submit" class="primary" id="submitBtn">Guardar falta</button>
-            <button type="button" class="ghost" id="cancelEditBtn" hidden>Cancelar edición</button>
-          </div>
-        </form>
-      </section>
+<div class="app">
+  <header class="top">
+    <div>
+      <p class="eyebrow" id="limitText">Límite: 20&nbsp;% por seminario</p>
+      <h1>Mis faltas</h1>
     </div>
+    <button type="button" class="icon-btn" id="shareBtn" aria-label="Compartir la web">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>
+    </button>
+  </header>
 
-    <div class="col-right">
-      <section class="card" id="seminars-section" aria-labelledby="seminars-heading">
-        <h2 class="section-title" id="seminars-heading">Seminarios</h2>
-        <div id="seminarsContainer"></div>
-      </section>
-    </div>
+  <div id="globalBanner" aria-live="polite"></div>
 
-    <section class="card full-width" id="history-section" aria-labelledby="history-heading">
-      <h2 class="section-title" id="history-heading">Historial de faltas</h2>
-      <div class="history-filter">
-        <div class="field">
-          <label for="historyFilterSelect">Filtrar por seminario</label>
-          <select id="historyFilterSelect">
-            <option value="">Todos los seminarios</option>
-          </select>
-        </div>
+  <!-- ======================= Vista: Seminarios ======================= -->
+  <main id="view-home" class="view" aria-labelledby="homeHeading">
+    <h2 id="homeHeading" class="visually-hidden">Seminarios</h2>
+    <section aria-label="Resumen" class="counts" id="counts"></section>
+    <div id="homeAlerts" style="display: contents;"></div>
+    <div class="segmented" role="group" aria-label="Filtrar por módulo" id="moduleFilter"></div>
+    <div id="modules" style="display: contents;"></div>
+    <section aria-labelledby="recentHeading" style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="section-head">
+        <h2 id="recentHeading">Últimas faltas</h2>
+        <button type="button" class="link-btn" id="seeAllBtn">Ver todas</button>
       </div>
-      <div id="historyContainer"></div>
+      <div class="rows" id="recentList"></div>
     </section>
+    <p class="footer" data-footer></p>
+  </main>
 
-    <section class="card full-width" id="data-section" aria-labelledby="data-heading">
-      <h2 class="section-title" id="data-heading">Gestión de datos</h2>
+  <!-- ======================= Vista: Historial ======================= -->
+  <main id="view-history" class="view" aria-labelledby="historyHeading" hidden>
+    <div class="section-head" style="padding-top: 0;">
+      <h2 id="historyHeading" style="font-size: 22px;">Historial</h2>
+    </div>
+    <div class="field">
+      <label for="historyFilter" class="field-label">Seminario</label>
+      <select id="historyFilter" class="control on-surface"></select>
+    </div>
+    <p class="history-meta" id="historyMeta" aria-live="polite"></p>
+    <div class="rows" id="historyList"></div>
+
+    <section class="card" aria-labelledby="backupHeading" id="backupCard">
+      <h2 id="backupHeading">Copia de seguridad</h2>
+      <p>Tus faltas solo se guardan en este navegador: nadie más las ve y no se suben a ningún sitio. Descarga una copia de vez en cuando por si se borran.</p>
       <div id="backupWarning"></div>
       <div class="data-actions">
-        <button type="button" id="exportJsonBtn">Exportar JSON</button>
-        <button type="button" id="importJsonBtn">Importar JSON</button>
-        <input type="file" id="importJsonInput" accept="application/json" class="visually-hidden">
-        <button type="button" id="exportCsvBtn">Exportar CSV (Excel)</button>
-        <button type="button" class="danger" id="deleteAllBtn">Borrar todo</button>
+        <button type="button" class="btn-secondary strong" id="exportJsonBtn">Descargar copia</button>
+        <button type="button" class="btn-secondary" id="importJsonBtn">Restaurar copia</button>
+        <button type="button" class="btn-secondary" id="exportCsvBtn" style="grid-column: 1 / -1;">Descargar para Excel (CSV)</button>
       </div>
-      <div id="lastExportInfo" class="data-note"></div>
-      <p class="data-note">Tus datos solo viven en este navegador (localStorage): nadie más los ve y no se guardan en el repositorio. Si usas un iPhone, añade esta web a la pantalla de inicio (Safari &rarr; Compartir &rarr; Añadir a pantalla de inicio) para evitar que se borren tras varios días sin abrirla.</p>
+      <input type="file" id="importJsonInput" accept="application/json,.json" class="visually-hidden" tabindex="-1" aria-hidden="true">
+      <p class="note" id="lastExportInfo"></p>
+      <p class="note">En iPhone, añade esta web a la pantalla de inicio (Safari → Compartir → Añadir a pantalla de inicio) para que Safari no borre tus datos si pasas días sin abrirla.</p>
+      <button type="button" class="btn-danger-text" id="deleteAllBtn">Borrar todas las faltas</button>
     </section>
+    <p class="footer" data-footer></p>
+  </main>
+</div>
+
+<!-- ======================= Barra inferior ======================= -->
+<nav class="bottom-nav" aria-label="Secciones">
+  <div class="inner">
+    <button type="button" class="nav-btn" data-nav="home" aria-current="page">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7.5" cy="7.5" r="4"/><circle cx="16.5" cy="7.5" r="4"/><circle cx="7.5" cy="16.5" r="4"/><circle cx="16.5" cy="16.5" r="4"/></svg>
+      Seminarios
+    </button>
+    <button type="button" class="nav-btn fab-btn" id="addBtn">
+      <span class="fab" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      </span>
+      Apuntar falta
+    </button>
+    <button type="button" class="nav-btn" data-nav="history">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      Historial
+    </button>
   </div>
-</main>
+</nav>
 
-<footer class="site-footer" id="siteFooter"></footer>
+<!-- ======================= Hoja: apuntar / editar ======================= -->
+<dialog class="sheet" id="sheet" aria-labelledby="sheetTitle">
+  <form class="sheet-body with-actions" id="absenceForm" novalidate>
+    <span class="grabber" aria-hidden="true"></span>
+    <div class="sheet-head">
+      <h2 id="sheetTitle">Nueva falta</h2>
+      <button type="button" class="icon-btn" id="closeSheetBtn" aria-label="Cerrar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
 
-<div id="toast" role="status" aria-live="assertive">
+    <fieldset>
+      <legend>¿Cuándo?</legend>
+      <div class="opts c3">
+        <label class="opt"><input type="radio" name="when" value="today" checked><span>Hoy</span></label>
+        <label class="opt"><input type="radio" name="when" value="yesterday"><span>Ayer</span></label>
+        <label class="opt"><input type="radio" name="when" value="other"><span>Otro día</span></label>
+      </div>
+      <div class="field" id="dateField" hidden style="margin-top: 10px;">
+        <label for="dateInput" class="visually-hidden">Fecha de la falta</label>
+        <input type="date" id="dateInput" class="control">
+      </div>
+    </fieldset>
+
+    <div class="field">
+      <label for="seminarSelect" class="field-label">¿De qué seminario?</label>
+      <select id="seminarSelect" class="control"></select>
+    </div>
+
+    <fieldset id="typeFieldset" hidden>
+      <legend>Tipo de clase</legend>
+      <div class="type-opts">
+        <label class="opt"><input type="radio" name="obligatory" value="no" checked><span>Clase normal</span></label>
+        <label class="opt tp"><input type="radio" name="obligatory" value="si"><span>Teoricopràctica (obligatoria)</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>¿Cuántas horas?</legend>
+      <div class="hour-opts">
+        <label class="opt"><input type="radio" name="hoursQuick" value="1"><span>1</span></label>
+        <label class="opt"><input type="radio" name="hoursQuick" value="2"><span>2</span></label>
+        <label class="opt"><input type="radio" name="hoursQuick" value="3"><span>3</span></label>
+        <label class="opt"><input type="radio" name="hoursQuick" value="4"><span>4</span></label>
+        <label style="display: block;">
+          <span class="visually-hidden">Otra cantidad de horas, por ejemplo 1,5</span>
+          <input type="text" id="hoursInput" class="hour-input" inputmode="decimal" placeholder="1,5" autocomplete="off">
+        </label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Motivo (opcional)</legend>
+      <div class="chips" id="reasonChips"></div>
+      <div class="field" id="reasonOtherField" hidden style="margin-top: 10px;">
+        <label for="reasonInput" class="visually-hidden">Escribe el motivo</label>
+        <input type="text" id="reasonInput" class="control" maxlength="200" placeholder="Escribe el motivo" autocomplete="off">
+      </div>
+    </fieldset>
+
+    <div class="preview" id="previewBox" aria-live="polite"></div>
+
+    <div class="sheet-actions">
+      <button type="submit" class="btn-primary" id="submitBtn">Guardar falta</button>
+      <button type="button" class="btn-danger-text" id="deleteOneBtn" hidden style="align-self: center;">Borrar esta falta</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- ======================= Confirmar borrar todo ======================= -->
+<dialog class="sheet" id="confirmDialog" aria-labelledby="confirmTitle">
+  <div class="sheet-body">
+    <span class="grabber" aria-hidden="true"></span>
+    <h2 id="confirmTitle" style="font-size: 22px; font-weight: 900;">¿Borrar todas las faltas?</h2>
+    <p style="margin: 0; color: var(--ink-2); font-weight: 600;">Se borrarán todas las faltas de este navegador. No se puede deshacer, así que descarga antes una copia si quieres conservarlas.</p>
+    <button type="button" class="btn-danger-solid" id="confirmDeleteAllBtn">Sí, borrar todo</button>
+    <button type="button" class="btn-plain" id="cancelDeleteAllBtn">Cancelar</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
   <span id="toastMessage"></span>
   <button type="button" id="toastUndoBtn">Deshacer</button>
 </div>
@@ -352,20 +545,22 @@
 
   /* ======================================================================
    * CONFIGURACIÓN: seminarios, horas totales y límite de faltas.
-   * Cambia estos valores si cambian los créditos o el porcentaje permitido.
+   * Cambia estos valores si cambian las horas o el porcentaje permitido.
    * ====================================================================== */
   const CONFIG = {
     // Límite general: % máximo de horas a las que se puede faltar por seminario.
     generalLimitPct: 0.20,
 
+    // Nombre de cada módulo. "tag" es la etiqueta corta que se ve en la web.
     modules: {
-      M1: "Mòdul 1 · La professió infermera",
-      M2: "Mòdul 2 · Estructura i funció del cos humà",
-      M3: "Mòdul 3 · Comunicació i relació d'ajuda"
+      M1: { tag: "M1", name: "La professió infermera" },
+      M2: { tag: "M2", name: "Estructura i funció del cos humà" },
+      M3: { tag: "M3", name: "Comunicació i relació d'ajuda" }
     },
 
     // Cada seminario: id único, nombre a mostrar, módulo, horas totales
     // y, si las tiene, horas teoricopràctiques obligatorias (no se puede faltar).
+    // ¡No cambies los "id"! Las faltas guardadas se enlazan con ellos.
     seminars: [
       { id: "tg13", name: "Treball guiat (M1 + M3)", module: "M1", hoursTotal: 10 },
       { id: "db", name: "Databases and introductory biostatistics", module: "M1", hoursTotal: 37 },
@@ -378,15 +573,19 @@
       { id: "psicologia", name: "Psicologia i gestió emocional", module: "M3", hoursTotal: 20 }
     ],
 
-    // El Treball guiat (M1+M3) es un único seminario compartido: esta nota
-    // se muestra dentro del bloque del Mòdul 3 en vez de duplicarlo.
-    sharedNotes: [
-      { inModule: "M3", refersTo: "tg13", text: "El Treball guiat (M1 + M3) se comparte con el Mòdul 1: consulta su progreso en esa sección, no se cuenta por separado aquí." }
-    ]
+    // Notas que se muestran debajo de un módulo.
+    moduleNotes: {
+      M3: "El Treball guiat de M3 es el mismo que el de M1 y se cuenta allí."
+    },
+
+    // Motivos rápidos del formulario.
+    reasons: ["Enfermedad", "Cita médica", "Trabajo", "Transporte", "Prácticas", "Asuntos personales"]
   };
 
   const STORAGE_KEY = "cat_absences_v1";
   const LAST_EXPORT_KEY = "cat_last_export_v1";
+  const UI_KEY = "cat_ui_v1";
+  const OTHER_REASON = "__other__";
 
   /* ---------------------------- utilidades ---------------------------- */
 
@@ -396,8 +595,7 @@
 
   function fmtHours(n) {
     n = round2(n);
-    let s = n.toFixed(2);
-    s = s.replace(/0+$/, "").replace(/\.$/, "");
+    let s = n.toFixed(2).replace(/0+$/, "").replace(/\.$/, "");
     if (s === "" || s === "-0") s = "0";
     return s.replace(".", ",");
   }
@@ -408,8 +606,8 @@
     if (normalized === "") return null;
     if (!/^\d+(\.\d+)?$/.test(normalized)) return null;
     const n = parseFloat(normalized);
-    if (isNaN(n) || n <= 0) return null;
-    return n;
+    if (isNaN(n) || n <= 0 || n > 24) return null;
+    return round2(n);
   }
 
   function escapeHtml(str) {
@@ -423,12 +621,21 @@
     return "id-" + Date.now() + "-" + Math.random().toString(16).slice(2);
   }
 
-  function todayISO() {
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yyyy}-${mm}-${dd}`;
+  function isoFromDate(d) {
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+  function todayISO() { return isoFromDate(new Date()); }
+  function yesterdayISO() { const d = new Date(); d.setDate(d.getDate() - 1); return isoFromDate(d); }
+
+  function dateFromISO(iso) {
+    const p = iso.split("-").map(Number);
+    return new Date(p[0], p[1] - 1, p[2]);
+  }
+
+  function formatDateShort(iso) {
+    try {
+      return dateFromISO(iso).toLocaleDateString("es-ES", { day: "numeric", month: "short" }).replace(".", "");
+    } catch (e) { return formatDateDisplay(iso); }
   }
 
   function formatDateDisplay(iso) {
@@ -447,30 +654,50 @@
     return CONFIG.seminars.find((s) => s.id === id) || null;
   }
 
-  function regularHours(seminar) {
-    return seminar.hoursTotal - (seminar.obligatoryHours || 0);
+  function maxAllowed(seminar) {
+    return round2((seminar.hoursTotal - (seminar.obligatoryHours || 0)) * CONFIG.generalLimitPct);
   }
 
-  function maxAllowed(seminar) {
-    return round2(regularHours(seminar) * CONFIG.generalLimitPct);
+  function moduleTag(seminar) {
+    const m = seminar && CONFIG.modules[seminar.module];
+    return m ? m.tag : "·";
   }
+
+  function sortByRecent(a, b) {
+    if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return (a.createdAt || "") < (b.createdAt || "") ? 1 : -1;
+  }
+
+  /* ---------------------------- iconos ---------------------------- */
+
+  const ICON = {
+    none: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="12" cy="12" r="9"/></svg>',
+    good: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
+    warn: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    exceeded: '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9Z"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>',
+    alert: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
+    chevron: '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>'
+  };
 
   /* ----------------------- estado / almacenamiento ---------------------- */
 
   let absences = [];
-  let storageBroken = false;
-  let pendingDelete = null; // { record, timeoutId }
+  let pendingDelete = null;   // { record, timeoutId }
+  let toastTimer = null;
+  let moduleFilter = "all";
+  let historyFilter = "";
+  let editingId = "";
+  let lastSeminarId = CONFIG.seminars[0].id;
+  let storageWarned = false;
 
   function showBanner(message) {
-    const el = document.getElementById("globalBanner");
+    if (storageWarned) return;
+    storageWarned = true;
     const div = document.createElement("div");
-    div.className = "banner-item";
-    div.textContent = message;
-    el.appendChild(div);
-  }
-
-  function clearBanner() {
-    document.getElementById("globalBanner").innerHTML = "";
+    div.className = "alert danger banner";
+    div.innerHTML = ICON.alert + "<span></span>";
+    div.querySelector("span").textContent = message;
+    document.getElementById("globalBanner").appendChild(div);
   }
 
   function loadAbsences() {
@@ -478,54 +705,72 @@
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return [];
       const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed)) return [];
-      return parsed;
+      // Se conservan también las faltas de seminarios que ya no estén en CONFIG,
+      // para no perderlas al guardar; simplemente no se muestran en los anillos.
+      return Array.isArray(parsed) ? parsed.filter((a) => a && typeof a === "object" && typeof a.id === "string") : [];
     } catch (e) {
-      storageBroken = true;
-      showBanner("No se ha podido leer el almacenamiento de este navegador (por ejemplo, en modo privado). Tus faltas no se guardarán entre sesiones.");
+      showBanner("Este navegador no deja guardar datos (por ejemplo, en modo privado). Tus faltas se perderán al cerrar la página.");
       return [];
     }
   }
 
-  function saveAbsences(list) {
+  function saveAbsences() {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(absences));
       return true;
     } catch (e) {
-      storageBroken = true;
-      showBanner("No se ha podido guardar en este navegador (por ejemplo, en modo privado o sin espacio). Los cambios podrían perderse al recargar.");
+      showBanner("No se ha podido guardar en este navegador (modo privado o sin espacio). Los cambios se perderán al recargar.");
       return false;
     }
   }
 
   function getLastExport() {
-    try {
-      return localStorage.getItem(LAST_EXPORT_KEY);
-    } catch (e) {
-      return null;
-    }
+    try { return localStorage.getItem(LAST_EXPORT_KEY); } catch (e) { return null; }
   }
-
   function setLastExport(iso) {
-    try {
-      localStorage.setItem(LAST_EXPORT_KEY, iso);
-    } catch (e) { /* ignorar: solo afecta al recordatorio de copia */ }
+    try { localStorage.setItem(LAST_EXPORT_KEY, iso); } catch (e) { /* solo afecta al recordatorio */ }
   }
 
-  function requestPersistentStorageIfNeeded(wasEmpty) {
-    if (!wasEmpty) return;
+  function loadUi() {
     try {
-      if (navigator.storage && navigator.storage.persist) {
-        navigator.storage.persist().catch(() => {});
-      }
-    } catch (e) { /* no disponible en este navegador */ }
+      const ui = JSON.parse(localStorage.getItem(UI_KEY) || "{}");
+      if (ui && (ui.moduleFilter === "all" || CONFIG.modules[ui.moduleFilter])) moduleFilter = ui.moduleFilter;
+    } catch (e) { /* sin preferencias guardadas */ }
+  }
+  function saveUi() {
+    try { localStorage.setItem(UI_KEY, JSON.stringify({ moduleFilter })); } catch (e) { /* ignorar */ }
   }
 
-  /* --------------------------- cálculos por seminario -------------------- */
+  function requestPersistentStorage() {
+    try {
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+    } catch (e) { /* no disponible */ }
+  }
 
-  function hoursUsed(seminarId) {
+  function validateEntry(raw) {
+    if (!raw || typeof raw !== "object") return null;
+    if (typeof raw.id !== "string" || raw.id === "") return null;
+    if (!isValidDateStr(raw.date)) return null;
+    const seminar = seminarById(raw.seminarId);
+    if (!seminar) return null;
+    const hours = typeof raw.hours === "number" ? raw.hours : parseHoursInput(String(raw.hours));
+    if (hours === null || isNaN(hours) || hours <= 0 || hours > 200) return null;
+    return {
+      id: raw.id,
+      date: raw.date,
+      seminarId: raw.seminarId,
+      hours: round2(hours),
+      obligatory: seminar.obligatoryHours ? !!raw.obligatory : false,
+      reason: typeof raw.reason === "string" ? raw.reason.slice(0, 200) : "",
+      createdAt: typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString()
+    };
+  }
+
+  /* --------------------------- cálculos --------------------------- */
+
+  function hoursUsed(seminarId, excludeId) {
     return round2(absences
-      .filter((a) => a.seminarId === seminarId && !a.obligatory)
+      .filter((a) => a.seminarId === seminarId && !a.obligatory && a.id !== excludeId)
       .reduce((sum, a) => sum + a.hours, 0));
   }
 
@@ -535,381 +780,489 @@
       .reduce((sum, a) => sum + a.hours, 0));
   }
 
-  function countFor(seminarId) {
-    return absences.filter((a) => a.seminarId === seminarId).length;
+  const STATUS_LABEL = {
+    none: "Sin faltas", good: "Vas bien", near: "Cerca del límite", nomargin: "Sin margen", exceeded: "Límite superado"
+  };
+
+  function statusKey(used, max) {
+    if (used <= 0) return "none";
+    if (used > max + 0.001) return "exceeded";
+    if (Math.abs(used - max) <= 0.001) return "nomargin";
+    if (used / max >= 0.6) return "near";
+    return "good";
   }
 
-  function statusFor(used, max) {
-    if (used <= 0) return { key: "none", label: "Sin faltas", icon: "—" };
-    if (used > max) return { key: "exceeded", label: "Límite superado", icon: "⛔" };
-    if (Math.abs(used - max) < 0.001) return { key: "nomargin", label: "Sin margen", icon: "⚠" };
-    const pct = used / max;
-    if (pct >= 0.6) return { key: "near", label: "Cerca del límite", icon: "⚠" };
-    return { key: "good", label: "Vas bien", icon: "✓" };
+  function remainingInfo(used, max) {
+    const key = statusKey(used, max);
+    if (key === "exceeded") return { key, big: "+" + fmtHours(used - max), small: "h de más", sentence: `Te has pasado ${fmtHours(used - max)} h del límite.` };
+    const rem = round2(max - used);
+    return { key, big: fmtHours(rem), small: "h quedan", sentence: rem === 0 ? "No te queda margen." : `Te quedan ${fmtHours(rem)} h.` };
   }
 
-  function statusClass(key) {
-    if (key === "none" || key === "good") return "status-good";
-    if (key === "near") return "status-near";
-    if (key === "nomargin") return "status-nomargin";
-    return "status-exceeded";
+  /* ----------------------------- anillos ----------------------------- */
+
+  function ringSvg(size, stroke, frac, newFrac) {
+    const r = (size - stroke) / 2;
+    const c = 2 * Math.PI * r;
+    const half = size / 2;
+    const arc = (f, cls) => {
+      f = Math.max(0, Math.min(1, f));
+      if (f <= 0) return "";
+      const cap = f >= 1 ? "butt" : "round";
+      return `<circle class="${cls}" cx="${half}" cy="${half}" r="${r}" fill="none" stroke-width="${stroke}" stroke-linecap="${cap}" stroke-dasharray="${(f * c).toFixed(2)} ${c.toFixed(2)}" transform="rotate(-90 ${half} ${half})"/>`;
+    };
+    return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" aria-hidden="true" focusable="false">
+      <circle class="ring-track" cx="${half}" cy="${half}" r="${r}" fill="none" stroke-width="${stroke}"/>
+      ${newFrac !== undefined ? arc(newFrac, "ring-new") : ""}
+      ${arc(frac, "ring-prog")}
+    </svg>`;
   }
 
   /* ------------------------------ render: resumen ------------------------ */
 
-  function renderSummary() {
-    const totalHours = round2(absences.reduce((s, a) => s + a.hours, 0));
-    const totalCount = absences.length;
-    const distinctDays = new Set(absences.map((a) => a.date)).size;
-    let nearCount = 0;
-    let exceededCount = 0;
+  function renderCounts() {
+    const c = { ok: 0, near: 0, nomargin: 0, exceeded: 0 };
     CONFIG.seminars.forEach((s) => {
-      const st = statusFor(hoursUsed(s.id), maxAllowed(s));
-      if (st.key === "near" || st.key === "nomargin") nearCount++;
-      if (st.key === "exceeded") exceededCount++;
+      const k = statusKey(hoursUsed(s.id), maxAllowed(s));
+      if (k === "none" || k === "good") c.ok++; else c[k]++;
     });
-    const obligatoryHoursMissed = round2(absences
-      .filter((a) => a.obligatory)
-      .reduce((s, a) => s + a.hours, 0));
-
-    const stats = [
-      { num: fmtHours(totalHours) + " h", label: "Horas faltadas en total" },
-      { num: String(totalCount), label: "Faltas registradas" },
-      { num: String(distinctDays), label: "Días distintos" },
-      { num: String(nearCount), label: "Seminarios cerca del límite" },
-      { num: String(exceededCount), label: "Seminarios con límite superado" },
-      { num: fmtHours(obligatoryHoursMissed) + " h", label: "Teoricopràctiques faltadas" }
+    const items = [
+      { n: c.ok, l: "van bien", color: "var(--accent)" },
+      { n: c.near, l: "cerca", color: "var(--near)" },
+      { n: c.nomargin, l: "sin margen", color: "var(--nomargin)" },
+      { n: c.exceeded, l: "superado", color: "var(--over)" }
     ];
+    document.getElementById("counts").innerHTML = items.map((it) => `
+      <div class="count">
+        <span class="dot" style="background:${it.color}" aria-hidden="true"></span>
+        <span class="n">${it.n}</span>
+        <span class="l">${it.l}</span>
+      </div>`).join("");
+  }
 
-    const grid = document.getElementById("summaryGrid");
-    grid.innerHTML = stats.map((s) => `
-      <div class="summary-stat">
-        <span class="num">${escapeHtml(s.num)}</span>
-        <span class="label">${escapeHtml(s.label)}</span>
-      </div>
-    `).join("");
+  function needsBackup() {
+    const last = getLastExport();
+    if (absences.length === 0) return false;
+    if (!last) return true;
+    const t = new Date(last).getTime();
+    return isNaN(t) || (Date.now() - t) / 86400000 > 14;
+  }
+
+  function renderHomeAlerts() {
+    let html = "";
+    const tp = round2(absences.filter((a) => a.obligatory).reduce((s, a) => s + a.hours, 0));
+    if (tp > 0) {
+      html += `<div class="alert danger">${ICON.alert}<span>${fmtHours(tp)} h faltadas a teoricopràctiques (obligatorias)</span></div>`;
+    }
+    if (needsBackup()) {
+      html += `<div class="alert warn">${ICON.alert}<span>Hace tiempo que no guardas una copia de tus faltas.</span><button type="button" class="alert-btn" data-action="export">Descargar</button></div>`;
+    }
+    document.getElementById("homeAlerts").innerHTML = html;
+  }
+
+  function renderModuleFilter() {
+    const opts = [{ key: "all", label: "Todos" }].concat(
+      Object.keys(CONFIG.modules).map((k) => ({ key: k, label: CONFIG.modules[k].tag }))
+    );
+    const el = document.getElementById("moduleFilter");
+    el.style.gridTemplateColumns = `repeat(${opts.length}, minmax(0, 1fr))`;
+    el.innerHTML = opts.map((o) =>
+      `<button type="button" data-module="${o.key}" aria-pressed="${o.key === moduleFilter}">${escapeHtml(o.label)}</button>`
+    ).join("");
   }
 
   /* ------------------------------ render: seminarios ---------------------- */
 
-  function renderSeminars() {
-    const container = document.getElementById("seminarsContainer");
-    container.innerHTML = "";
-
-    Object.keys(CONFIG.modules).forEach((modKey) => {
-      const block = document.createElement("div");
-      block.className = "module-block";
-      const h3 = document.createElement("h3");
-      h3.textContent = CONFIG.modules[modKey];
-      block.appendChild(h3);
-
-      CONFIG.seminars.filter((s) => s.module === modKey).forEach((s) => {
-        block.appendChild(renderSeminarCard(s));
-      });
-
-      CONFIG.sharedNotes.filter((n) => n.inModule === modKey).forEach((note) => {
-        const div = document.createElement("div");
-        div.className = "shared-note";
-        div.textContent = note.text;
-        block.appendChild(div);
-      });
-
-      container.appendChild(block);
-    });
-  }
-
-  function renderSeminarCard(seminar) {
+  function tileHtml(seminar) {
     const used = hoursUsed(seminar.id);
     const max = maxAllowed(seminar);
-    const st = statusFor(used, max);
-    const cls = statusClass(st.key);
-    const pct = max > 0 ? Math.min(100, (used / max) * 100) : 0;
-    const remaining = round2(max - used);
+    const info = remainingInfo(used, max);
+    const label = STATUS_LABEL[info.key];
+    const icon = info.key === "near" || info.key === "nomargin" ? ICON.warn : ICON[info.key];
+    const colored = info.key === "exceeded" || info.key === "nomargin";
+    const tp = seminar.obligatoryHours ? obligatoryUsed(seminar.id) : 0;
+    const count = absences.filter((a) => a.seminarId === seminar.id).length;
+    const aria = `${seminar.name}. ${label}. Has faltado ${fmtHours(used)} de ${fmtHours(max)} horas permitidas. ${info.sentence}` +
+      (tp > 0 ? ` Además has faltado ${fmtHours(tp)} horas a teoricopràctiques obligatorias.` : "") +
+      ` Ver sus ${count} faltas.`;
+    return `
+      <button type="button" class="tile st-${info.key}" data-seminar="${seminar.id}" aria-label="${escapeHtml(aria)}">
+        <span class="ring" style="width:96px;height:96px">
+          ${ringSvg(96, 10, max > 0 ? used / max : 0)}
+          <span class="center" aria-hidden="true">
+            <span class="big${colored ? " colored" : ""}">${info.big}</span>
+            <span class="small">${info.small}</span>
+          </span>
+        </span>
+        <span class="name" aria-hidden="true">${escapeHtml(seminar.name)}</span>
+        <span class="pill" aria-hidden="true">${icon}${label}</span>
+        <span class="used" aria-hidden="true">Faltadas ${fmtHours(used)} de ${fmtHours(max)} h</span>
+        ${tp > 0 ? `<span class="tp-pill" aria-hidden="true">Teoricopràctica: ${fmtHours(tp)} h faltadas</span>` : ""}
+      </button>`;
+  }
 
-    const card = document.createElement("div");
-    card.className = "seminar-card " + cls;
-    card.id = "seminar-" + seminar.id;
+  function renderModules() {
+    const html = Object.keys(CONFIG.modules)
+      .filter((k) => moduleFilter === "all" || moduleFilter === k)
+      .map((k) => {
+        const mod = CONFIG.modules[k];
+        const sems = CONFIG.seminars.filter((s) => s.module === k);
+        const note = CONFIG.moduleNotes[k];
+        return `
+          <section class="module" aria-labelledby="mod-${k}">
+            <h3 class="module-title" id="mod-${k}"><span class="tag">${escapeHtml(mod.tag)}</span>${escapeHtml(mod.name)}</h3>
+            ${sems.length ? `<div class="tiles">${sems.map(tileHtml).join("")}</div>` : ""}
+            ${note ? `<p class="module-note">${escapeHtml(note)}</p>` : ""}
+          </section>`;
+      }).join("");
+    document.getElementById("modules").innerHTML = html;
+  }
 
-    let remainingText;
-    if (used > max) {
-      remainingText = `Te has pasado ${fmtHours(used - max)} h del límite.`;
+  /* ------------------------------ render: listas -------------------------- */
+
+  function rowHtml(a) {
+    const s = seminarById(a.seminarId);
+    const name = s ? s.name : a.seminarId;
+    const tag = a.obligatory ? '<span class="tp-tag">Teoricopràctica</span>' : "";
+    const sub = [formatDateShort(a.date), a.reason].filter(Boolean).join(" · ");
+    const aria = `${name}${a.obligatory ? ", teoricopràctica" : ""}, ${formatDateDisplay(a.date)}, ${fmtHours(a.hours)} horas${a.reason ? ", " + a.reason : ""}. Editar o borrar.`;
+    return `
+      <button type="button" class="row" data-edit="${escapeHtml(a.id)}" aria-label="${escapeHtml(aria)}">
+        <span class="avatar${a.obligatory ? " tp" : ""}" aria-hidden="true">${escapeHtml(moduleTag(s))}</span>
+        <span class="txt" aria-hidden="true">
+          <span class="t1">${escapeHtml(name)}${tag}</span>
+          <span class="t2">${escapeHtml(sub)}</span>
+        </span>
+        <span class="hours" aria-hidden="true">${fmtHours(a.hours)} h</span>
+        ${ICON.chevron}
+      </button>`;
+  }
+
+  function renderRecent() {
+    const list = absences.slice().sort(sortByRecent).slice(0, 3);
+    document.getElementById("seeAllBtn").hidden = absences.length === 0;
+    document.getElementById("recentList").innerHTML = list.length
+      ? list.map(rowHtml).join("")
+      : `<div class="empty">Aún no has apuntado ninguna falta.<br>Pulsa <strong>+</strong> para empezar.</div>`;
+  }
+
+  function populateSeminarOptions(select, withAll) {
+    const current = select.value;
+    let html = withAll ? '<option value="">Todos los seminarios</option>' : "";
+    Object.keys(CONFIG.modules).forEach((k) => {
+      const sems = CONFIG.seminars.filter((s) => s.module === k);
+      if (!sems.length) return;
+      html += `<optgroup label="${escapeHtml(CONFIG.modules[k].tag + " · " + CONFIG.modules[k].name)}">` +
+        sems.map((s) => `<option value="${s.id}">${escapeHtml(s.name)}</option>`).join("") + "</optgroup>";
+    });
+    select.innerHTML = html;
+    if (current !== undefined) select.value = current;
+  }
+
+  function renderHistory() {
+    const select = document.getElementById("historyFilter");
+    select.value = historyFilter;
+    const list = absences.filter((a) => !historyFilter || a.seminarId === historyFilter).sort(sortByRecent);
+    const total = round2(list.reduce((s, a) => s + a.hours, 0));
+    document.getElementById("historyMeta").textContent = list.length
+      ? `${list.length} ${list.length === 1 ? "falta" : "faltas"} · ${fmtHours(total)} h en total. Toca una para editarla o borrarla.`
+      : "";
+    document.getElementById("historyList").innerHTML = list.length
+      ? list.map(rowHtml).join("")
+      : `<div class="empty">${absences.length ? "No hay faltas en este seminario." : "Aún no has apuntado ninguna falta."}</div>`;
+  }
+
+  function renderDataSection() {
+    const last = getLastExport();
+    const info = document.getElementById("lastExportInfo");
+    if (last) {
+      const d = new Date(last);
+      info.textContent = `Última copia descargada: ${d.toLocaleDateString("es-ES")} a las ${d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}.`;
     } else {
-      remainingText = `Quedan ${fmtHours(remaining)} h de margen.`;
+      info.textContent = "Todavía no has descargado ninguna copia.";
     }
+    document.getElementById("backupWarning").innerHTML = needsBackup()
+      ? `<div class="alert warn">${ICON.alert}<span>Han pasado más de 14 días sin copia (o nunca has hecho una). Te recomendamos descargarla.</span></div>`
+      : "";
+    document.getElementById("deleteAllBtn").hidden = absences.length === 0;
+  }
 
-    const valueText = `${fmtHours(used)} h de ${fmtHours(max)} h permitidas. ${remainingText} Estado: ${st.label}.`;
-
-    let obligatoryLine = "";
-    if (seminar.obligatoryHours) {
-      const obUsed = obligatoryUsed(seminar.id);
-      if (obUsed > 0) {
-        obligatoryLine = `<div class="obligatory-line has-missed">Teoricopràctiques (obligatorias): ${fmtHours(obUsed)} h faltadas ⚠ — eran de asistencia obligatoria.</div>`;
-      } else {
-        obligatoryLine = `<div class="obligatory-line">Teoricopràctiques (obligatorias): sin faltas ✓</div>`;
+  function renderFooter() {
+    let repoLink = "";
+    if (location.hostname.endsWith("github.io")) {
+      const user = location.hostname.split(".")[0];
+      const repo = location.pathname.split("/").filter(Boolean)[0];
+      if (user && repo) {
+        repoLink = ` · <a href="https://github.com/${encodeURIComponent(user)}/${encodeURIComponent(repo)}">Código en GitHub</a>`;
       }
     }
-
-    const n = countFor(seminar.id);
-
-    card.innerHTML = `
-      <div class="row-top">
-        <span class="seminar-name">${escapeHtml(seminar.name)}</span>
-        <a href="#history-section" class="see-link" data-filter-seminar="${seminar.id}">Ver faltas (${n})</a>
-      </div>
-      <div class="status-line"><span aria-hidden="true">${st.icon}</span><span>${escapeHtml(st.label)}</span></div>
-      <div class="meter-track" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct)}" aria-valuetext="${escapeHtml(valueText)}" aria-label="Progreso de faltas en ${escapeHtml(seminar.name)}">
-        <div class="meter-fill" style="width:${pct}%"></div>
-      </div>
-      <div class="meta-line">${fmtHours(used)} h de ${fmtHours(max)} h · ${remainingText}</div>
-      ${obligatoryLine}
-    `;
-    return card;
-  }
-
-  /* ------------------------------ formulario ---------------------------- */
-
-  function populateSeminarSelect() {
-    const select = document.getElementById("seminarSelect");
-    select.innerHTML = "";
-    Object.keys(CONFIG.modules).forEach((modKey) => {
-      const seminarsInModule = CONFIG.seminars.filter((s) => s.module === modKey);
-      if (seminarsInModule.length === 0) return;
-      const group = document.createElement("optgroup");
-      group.label = CONFIG.modules[modKey];
-      seminarsInModule.forEach((s) => {
-        const opt = document.createElement("option");
-        opt.value = s.id;
-        opt.textContent = s.name;
-        group.appendChild(opt);
-      });
-      select.appendChild(group);
+    document.querySelectorAll("[data-footer]").forEach((el) => {
+      el.innerHTML = `Tus datos se guardan solo en este navegador.${repoLink}`;
     });
   }
 
-  function populateHistoryFilter() {
-    const select = document.getElementById("historyFilterSelect");
-    const current = select.value;
-    select.innerHTML = '<option value="">Todos los seminarios</option>';
-    Object.keys(CONFIG.modules).forEach((modKey) => {
-      CONFIG.seminars.filter((s) => s.module === modKey).forEach((s) => {
-        const opt = document.createElement("option");
-        opt.value = s.id;
-        opt.textContent = s.name;
-        select.appendChild(opt);
-      });
-    });
-    select.value = current || "";
+  function renderAll() {
+    renderCounts();
+    renderHomeAlerts();
+    renderModuleFilter();
+    renderModules();
+    renderRecent();
+    renderHistory();
+    renderDataSection();
   }
 
-  function toggleObligatoryField() {
-    const seminarId = document.getElementById("seminarSelect").value;
-    const fieldset = document.getElementById("obligatoryFieldset");
-    fieldset.hidden = seminarId !== "fonaments";
-    if (fieldset.hidden) {
-      const radios = fieldset.querySelectorAll('input[name="obligatory"]');
-      radios.forEach((r) => { r.checked = r.value === "no"; });
+  /* ------------------------------ vistas ------------------------------ */
+
+  function currentView() {
+    return location.hash === "#historial" ? "history" : "home";
+  }
+
+  function applyView() {
+    const view = currentView();
+    document.getElementById("view-home").hidden = view !== "home";
+    document.getElementById("view-history").hidden = view !== "history";
+    document.querySelectorAll("[data-nav]").forEach((b) => {
+      if (b.getAttribute("data-nav") === view) b.setAttribute("aria-current", "page");
+      else b.removeAttribute("aria-current");
+    });
+  }
+
+  function goTo(view) {
+    const hash = view === "history" ? "#historial" : "";
+    if (location.hash !== hash) {
+      if (hash) location.hash = hash;
+      else history.pushState(null, "", location.pathname + location.search);
     }
+    applyView();
+    window.scrollTo(0, 0);
   }
 
-  function currentObligatoryChoice() {
-    const seminarId = document.getElementById("seminarSelect").value;
-    if (seminarId !== "fonaments") return false;
-    const checked = document.querySelector('input[name="obligatory"]:checked');
-    return !!checked && checked.value === "si";
+  /* ------------------------------ hoja ------------------------------ */
+
+  const sheet = document.getElementById("sheet");
+  const form = document.getElementById("absenceForm");
+
+  function openDialog(d) {
+    document.body.classList.add("sheet-open");
+    if (typeof d.showModal === "function") d.showModal(); else d.setAttribute("open", "");
+  }
+  function closeDialog(d) {
+    if (typeof d.close === "function" && d.open) d.close(); else d.removeAttribute("open");
+    document.body.classList.remove("sheet-open");
+  }
+
+  function renderReasonChips() {
+    const opts = CONFIG.reasons.map((r) => ({ value: r, label: r })).concat([{ value: OTHER_REASON, label: "Otro…" }]);
+    document.getElementById("reasonChips").innerHTML = opts.map((o) =>
+      `<label class="opt"><input type="radio" name="reason" value="${escapeHtml(o.value)}"><span>${escapeHtml(o.label)}</span></label>`
+    ).join("");
+  }
+
+  function radioValue(name) {
+    const el = form.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : "";
+  }
+  function setRadio(name, value) {
+    form.querySelectorAll(`input[name="${name}"]`).forEach((r) => {
+      r.checked = r.value === value;
+      r.dataset.wasChecked = r.checked ? "1" : "";
+    });
+  }
+
+  function formDate() {
+    const w = radioValue("when");
+    if (w === "today") return todayISO();
+    if (w === "yesterday") return yesterdayISO();
+    return document.getElementById("dateInput").value;
+  }
+
+  function formHours() {
+    const quick = radioValue("hoursQuick");
+    if (quick) return Number(quick);
+    return parseHoursInput(document.getElementById("hoursInput").value);
+  }
+
+  function formReason() {
+    const r = radioValue("reason");
+    if (r === OTHER_REASON) return document.getElementById("reasonInput").value.trim().slice(0, 200);
+    return r;
+  }
+
+  function formObligatory() {
+    const s = seminarById(document.getElementById("seminarSelect").value);
+    return !!(s && s.obligatoryHours) && radioValue("obligatory") === "si";
+  }
+
+  function syncFormVisibility() {
+    const s = seminarById(document.getElementById("seminarSelect").value);
+    const hasTp = !!(s && s.obligatoryHours);
+    document.getElementById("typeFieldset").hidden = !hasTp;
+    if (!hasTp) setRadio("obligatory", "no");
+    document.getElementById("dateField").hidden = radioValue("when") !== "other";
+    document.getElementById("reasonOtherField").hidden = radioValue("reason") !== OTHER_REASON;
+    const hi = document.getElementById("hoursInput");
+    hi.classList.toggle("filled", !radioValue("hoursQuick") && hi.value.trim() !== "");
   }
 
   function updatePreview() {
+    syncFormVisibility();
     const box = document.getElementById("previewBox");
-    const seminarId = document.getElementById("seminarSelect").value;
-    const seminar = seminarById(seminarId);
-    const hours = parseHoursInput(document.getElementById("hoursInput").value);
-    const editingId = document.getElementById("editingId").value;
-    const isObligatory = currentObligatoryChoice();
-
-    box.className = "";
-    if (!seminar || hours === null) {
-      box.textContent = "Rellena el formulario para ver el efecto de la falta.";
-      return;
-    }
-
-    if (isObligatory) {
-      box.classList.add("danger");
-      box.textContent = `Aviso: las teoricopràctiques de Fonaments son de asistencia obligatoria y no se puede faltar. Esta falta se registrará aparte, en rojo, y no afecta al margen de ${fmtHours(maxAllowed(seminar))} h de Fonaments.`;
-      return;
-    }
-
+    const seminar = seminarById(document.getElementById("seminarSelect").value);
+    if (!seminar) { box.className = "preview"; box.textContent = ""; return; }
+    const hours = formHours();
     const max = maxAllowed(seminar);
-    const currentUsed = absences
-      .filter((a) => a.seminarId === seminarId && !a.obligatory && a.id !== editingId)
-      .reduce((s, a) => s + a.hours, 0);
-    const newTotal = round2(currentUsed + hours);
-    const remaining = round2(max - newTotal);
+    const before = hoursUsed(seminar.id, editingId);
 
-    if (remaining > 0) {
-      box.classList.add("ok");
-      box.textContent = `Llevarías ${fmtHours(newTotal)} h de ${fmtHours(max)} h. Te quedarían ${fmtHours(remaining)} h.`;
-    } else if (Math.abs(remaining) < 0.001) {
-      box.classList.add("warn");
-      box.textContent = `Llevarías ${fmtHours(newTotal)} h de ${fmtHours(max)} h. Llegarías justo al límite, sin margen.`;
-    } else {
-      box.classList.add("danger");
-      box.textContent = `Llevarías ${fmtHours(newTotal)} h de ${fmtHours(max)} h. Te pasarías ${fmtHours(Math.abs(remaining))} h del límite.`;
+    if (formObligatory()) {
+      box.className = "preview is-alert";
+      box.innerHTML = `<span class="warn-icon">${ICON.alert}</span><p>Las teoricopràctiques son obligatorias: no se puede faltar. Esta falta se apuntará aparte, en rojo, y no gasta tus ${fmtHours(max)} h de margen.</p>`;
+      return;
     }
+
+    let after = before;
+    let text;
+    if (hours === null) {
+      const info = remainingInfo(before, max);
+      text = info.key === "exceeded"
+        ? `Ya te has pasado <strong>${fmtHours(before - max)} h</strong> en este seminario.`
+        : `Ahora te quedan <strong>${fmtHours(max - before)} h</strong> en este seminario. Elige cuántas horas has faltado.`;
+    } else {
+      after = round2(before + hours);
+      const rem = round2(max - after);
+      if (rem > 0) text = `Te quedarían <strong>${fmtHours(rem)} h</strong>. Llevarías ${fmtHours(after)} de ${fmtHours(max)} h.`;
+      else if (rem === 0) text = `Llegarías <strong>justo al límite</strong>: ${fmtHours(after)} de ${fmtHours(max)} h, sin margen.`;
+      else text = `Te pasarías <strong>${fmtHours(-rem)} h</strong> del límite (${fmtHours(after)} de ${fmtHours(max)} h).`;
+    }
+    const info = remainingInfo(after, max);
+    box.className = `preview st-${info.key}`;
+    box.innerHTML = `
+      <div class="ring" style="width:68px;height:68px">
+        ${ringSvg(68, 8, max > 0 ? before / max : 0, max > 0 ? after / max : 0)}
+        <div class="center" aria-hidden="true"><span class="big${info.key === "exceeded" || info.key === "nomargin" ? " colored" : ""}" style="font-size:15px">${info.big}</span></div>
+      </div>
+      <p>${text}</p>`;
   }
 
   function resetForm() {
-    document.getElementById("absenceForm").reset();
+    form.reset();
+    editingId = "";
+    setRadio("when", "today");
+    setRadio("obligatory", "no");
+    setRadio("hoursQuick", "");
+    setRadio("reason", "");
     document.getElementById("dateInput").value = todayISO();
-    document.getElementById("editingId").value = "";
+    document.getElementById("dateInput").max = todayISO();
+    document.getElementById("seminarSelect").value = lastSeminarId;
+    document.getElementById("sheetTitle").textContent = "Nueva falta";
     document.getElementById("submitBtn").textContent = "Guardar falta";
-    document.getElementById("cancelEditBtn").hidden = true;
-    toggleObligatoryField();
-    updatePreview();
+    document.getElementById("deleteOneBtn").hidden = true;
   }
 
-  function loadAbsenceIntoForm(absence) {
-    document.getElementById("editingId").value = absence.id;
-    document.getElementById("dateInput").value = absence.date;
-    document.getElementById("seminarSelect").value = absence.seminarId;
-    document.getElementById("hoursInput").value = String(absence.hours).replace(".", ",");
-    document.getElementById("reasonInput").value = absence.reason || "";
-    toggleObligatoryField();
-    if (absence.seminarId === "fonaments") {
-      const radio = document.querySelector(`input[name="obligatory"][value="${absence.obligatory ? "si" : "no"}"]`);
-      if (radio) radio.checked = true;
+  function openSheetForNew(seminarId) {
+    resetForm();
+    if (seminarId) document.getElementById("seminarSelect").value = seminarId;
+    updatePreview();
+    openDialog(sheet);
+  }
+
+  function openSheetForEdit(id) {
+    const a = absences.find((x) => x.id === id);
+    if (!a) return;
+    resetForm();
+    editingId = a.id;
+    if (a.date === todayISO()) setRadio("when", "today");
+    else if (a.date === yesterdayISO()) setRadio("when", "yesterday");
+    else { setRadio("when", "other"); document.getElementById("dateInput").value = a.date; }
+    document.getElementById("seminarSelect").value = a.seminarId;
+    setRadio("obligatory", a.obligatory ? "si" : "no");
+    if ([1, 2, 3, 4].indexOf(a.hours) !== -1) setRadio("hoursQuick", String(a.hours));
+    else document.getElementById("hoursInput").value = fmtHours(a.hours);
+    if (a.reason) {
+      if (CONFIG.reasons.indexOf(a.reason) !== -1) setRadio("reason", a.reason);
+      else { setRadio("reason", OTHER_REASON); document.getElementById("reasonInput").value = a.reason; }
     }
+    document.getElementById("sheetTitle").textContent = "Editar falta";
     document.getElementById("submitBtn").textContent = "Guardar cambios";
-    document.getElementById("cancelEditBtn").hidden = false;
+    document.getElementById("deleteOneBtn").hidden = false;
     updatePreview();
-    document.getElementById("form-section").scrollIntoView({ behavior: "smooth", block: "start" });
+    openDialog(sheet);
   }
 
-  function handleFormSubmit(e) {
+  function showFormError(message, focusEl) {
+    const box = document.getElementById("previewBox");
+    box.className = "preview is-alert";
+    box.innerHTML = `<span class="warn-icon">${ICON.alert}</span><p></p>`;
+    box.querySelector("p").textContent = message;
+    if (focusEl) focusEl.focus();
+  }
+
+  function handleSubmit(e) {
     e.preventDefault();
     const seminarId = document.getElementById("seminarSelect").value;
     const seminar = seminarById(seminarId);
-    const hours = parseHoursInput(document.getElementById("hoursInput").value);
-    const date = document.getElementById("dateInput").value;
-    const reason = document.getElementById("reasonInput").value.trim().slice(0, 200);
-    const editingId = document.getElementById("editingId").value;
-    const obligatory = currentObligatoryChoice();
+    const date = formDate();
+    const hours = formHours();
+    if (!seminar) return showFormError("Elige un seminario.", document.getElementById("seminarSelect"));
+    if (!isValidDateStr(date)) return showFormError("Elige la fecha de la falta.", document.getElementById("dateInput"));
+    if (hours === null) return showFormError("Indica cuántas horas has faltado (por ejemplo 2 o 1,5).", document.getElementById("hoursInput"));
 
-    if (!seminar || hours === null || !isValidDateStr(date)) {
-      const box = document.getElementById("previewBox");
-      box.className = "danger";
-      box.textContent = "Revisa la fecha y las horas: no se ha podido guardar la falta.";
-      return;
-    }
-
+    const entry = { date, seminarId, hours, obligatory: formObligatory(), reason: formReason() };
     const wasEmpty = absences.length === 0;
-
+    let message;
     if (editingId) {
       const idx = absences.findIndex((a) => a.id === editingId);
-      if (idx !== -1) {
-        absences[idx] = { ...absences[idx], date, seminarId, hours, obligatory, reason };
-      }
+      if (idx !== -1) absences[idx] = Object.assign({}, absences[idx], entry);
+      message = "Cambios guardados.";
     } else {
-      absences.push({
-        id: genId(),
-        date, seminarId, hours, obligatory, reason,
-        createdAt: new Date().toISOString()
-      });
+      absences.push(Object.assign({ id: genId(), createdAt: new Date().toISOString() }, entry));
+      message = "Falta guardada.";
     }
-
-    saveAbsences(absences);
-    requestPersistentStorageIfNeeded(wasEmpty);
-    resetForm();
+    lastSeminarId = seminarId;
+    saveAbsences();
+    if (wasEmpty) requestPersistentStorage();
+    closeDialog(sheet);
     renderAll();
+    showToast(message, false);
   }
 
-  /* ------------------------------ historial ------------------------------ */
-
-  function renderHistory() {
-    const container = document.getElementById("historyContainer");
-    const filter = document.getElementById("historyFilterSelect").value;
-    const list = absences
-      .filter((a) => !filter || a.seminarId === filter)
-      .slice()
-      .sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : (a.createdAt < b.createdAt ? 1 : -1)));
-
-    if (list.length === 0) {
-      container.innerHTML = absences.length === 0
-        ? `<div class="empty-state">Todavía no has apuntado ninguna falta. ¡Usa el formulario de arriba para empezar!</div>`
-        : `<div class="empty-state">No hay faltas para este filtro.</div>`;
-      return;
-    }
-
-    const rows = list.map((a) => {
-      const seminar = seminarById(a.seminarId);
-      const name = seminar ? seminar.name : a.seminarId;
-      const tag = a.obligatory ? '<span class="tag-obligatory">Teoricopràctica</span>' : "";
-      return `
-        <tr data-id="${escapeHtml(a.id)}">
-          <td>${escapeHtml(formatDateDisplay(a.date))}</td>
-          <td>${escapeHtml(name)}${tag}</td>
-          <td>${fmtHours(a.hours)} h</td>
-          <td>${escapeHtml(a.reason || "—")}</td>
-          <td>
-            <div class="history-actions">
-              <button type="button" class="small" data-action="edit" data-id="${escapeHtml(a.id)}">Editar</button>
-              <button type="button" class="small danger" data-action="delete" data-id="${escapeHtml(a.id)}">Borrar</button>
-            </div>
-          </td>
-        </tr>
-      `;
-    }).join("");
-
-    container.innerHTML = `
-      <table class="history-table">
-        <thead>
-          <tr><th>Fecha</th><th>Seminario</th><th>Horas</th><th>Motivo</th><th>Acciones</th></tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
-    `;
-  }
+  /* ------------------------------ borrar ------------------------------ */
 
   function deleteAbsence(id) {
     const idx = absences.findIndex((a) => a.id === id);
     if (idx === -1) return;
     const record = absences[idx];
     absences.splice(idx, 1);
-    saveAbsences(absences);
+    saveAbsences();
     renderAll();
-
     if (pendingDelete) clearTimeout(pendingDelete.timeoutId);
-    const timeoutId = setTimeout(() => {
-      pendingDelete = null;
-      hideToast();
-    }, 6000);
-    pendingDelete = { record, timeoutId };
-    showToast("Falta eliminada.", true);
+    pendingDelete = { record, timeoutId: setTimeout(() => { pendingDelete = null; hideToast(); }, 6000) };
+    showToast("Falta borrada.", true);
   }
 
   function undoDelete() {
     if (!pendingDelete) return;
     clearTimeout(pendingDelete.timeoutId);
-    absences.push(pendingDelete.record);
-    saveAbsences(absences);
+    if (!absences.some((a) => a.id === pendingDelete.record.id)) absences.push(pendingDelete.record);
     pendingDelete = null;
+    saveAbsences();
     hideToast();
     renderAll();
   }
 
-  /* -------------------------------- toast -------------------------------- */
+  /* ------------------------------ aviso flotante ------------------------------ */
 
   function showToast(message, withUndo) {
-    const toast = document.getElementById("toast");
+    clearTimeout(toastTimer);
     document.getElementById("toastMessage").textContent = message;
     document.getElementById("toastUndoBtn").hidden = !withUndo;
-    toast.classList.add("visible");
+    document.getElementById("toast").classList.add("visible");
+    if (!withUndo) toastTimer = setTimeout(hideToast, 3500);
   }
-
   function hideToast() {
     document.getElementById("toast").classList.remove("visible");
   }
 
-  /* --------------------------- gestión de datos --------------------------- */
+  /* --------------------------- copias de seguridad --------------------------- */
 
   function downloadBlob(content, filename, type) {
     const blob = new Blob([content], { type });
@@ -923,208 +1276,148 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
-  function exportJson() {
-    downloadBlob(JSON.stringify(absences, null, 2), `faltas-${todayISO()}.json`, "application/json");
-    markExported();
-  }
-
   function markExported() {
     setLastExport(new Date().toISOString());
+    renderHomeAlerts();
     renderDataSection();
   }
 
-  function validateImportedEntry(raw) {
-    if (!raw || typeof raw !== "object") return null;
-    if (typeof raw.id !== "string" || raw.id === "") return null;
-    if (!isValidDateStr(raw.date)) return null;
-    const seminar = seminarById(raw.seminarId);
-    if (!seminar) return null;
-    const hours = typeof raw.hours === "number" ? raw.hours : parseHoursInput(String(raw.hours));
-    if (hours === null || isNaN(hours) || hours <= 0 || hours > 200) return null;
-    const obligatory = raw.seminarId === "fonaments" ? !!raw.obligatory : false;
-    const reason = typeof raw.reason === "string" ? raw.reason.slice(0, 200) : "";
-    const createdAt = typeof raw.createdAt === "string" ? raw.createdAt : new Date().toISOString();
-    return { id: raw.id, date: raw.date, seminarId: raw.seminarId, hours: round2(hours), obligatory, reason, createdAt };
+  function exportJson() {
+    downloadBlob(JSON.stringify(absences, null, 2), `faltas-${todayISO()}.json`, "application/json");
+    markExported();
+    showToast("Copia descargada.", false);
+  }
+
+  function exportCsv() {
+    const header = ["Fecha", "Módulo", "Seminario", "Horas", "Motivo", "Teoricopràctica"];
+    const esc = (val) => {
+      const s = String(val);
+      return /[;"\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+    };
+    const rows = absences.slice().sort(sortByRecent).map((a) => {
+      const s = seminarById(a.seminarId);
+      return [formatDateDisplay(a.date), moduleTag(s), s ? s.name : a.seminarId, fmtHours(a.hours), a.reason || "", a.obligatory ? "Sí" : "No"]
+        .map(esc).join(";");
+    });
+    const csv = "﻿" + header.join(";") + "\n" + rows.join("\n") + "\n";
+    downloadBlob(csv, `faltas-${todayISO()}.csv`, "text/csv;charset=utf-8;");
+    markExported();
+    showToast("CSV descargado.", false);
   }
 
   function importJsonFile(file) {
     const reader = new FileReader();
     reader.onload = () => {
       let parsed;
-      try {
-        parsed = JSON.parse(String(reader.result));
-      } catch (e) {
-        showToast("El archivo no es un JSON válido.", false);
-        return;
-      }
-      if (!Array.isArray(parsed)) {
-        showToast("El archivo no tiene el formato esperado (una lista de faltas).", false);
-        return;
-      }
-      const existingIds = new Set(absences.map((a) => a.id));
+      try { parsed = JSON.parse(String(reader.result)); } catch (e) { showToast("Ese archivo no es una copia válida.", false); return; }
+      if (!Array.isArray(parsed)) { showToast("Ese archivo no tiene el formato de una copia.", false); return; }
+      const ids = new Set(absences.map((a) => a.id));
       let added = 0, skipped = 0, invalid = 0;
       parsed.forEach((raw) => {
-        const entry = validateImportedEntry(raw);
+        const entry = validateEntry(raw);
         if (!entry) { invalid++; return; }
-        if (existingIds.has(entry.id)) { skipped++; return; }
-        existingIds.add(entry.id);
+        if (ids.has(entry.id)) { skipped++; return; }
+        ids.add(entry.id);
         absences.push(entry);
         added++;
       });
-      saveAbsences(absences);
+      saveAbsences();
       renderAll();
-      showToast(`Importación: ${added} añadidas, ${skipped} ya existían, ${invalid} no válidas.`, false);
+      showToast(`Restaurado: ${added} añadidas, ${skipped} ya estaban${invalid ? `, ${invalid} no válidas` : ""}.`, false);
     };
     reader.readAsText(file);
   }
 
-  function exportCsv() {
-    const header = ["Fecha", "Seminario", "Horas", "Motivo", "Teoricopràctica"];
-    const escapeCsv = (val) => {
-      const s = String(val);
-      if (/[;"\n]/.test(s)) return '"' + s.replace(/"/g, '""') + '"';
-      return s;
-    };
-    const rows = absences
-      .slice()
-      .sort((a, b) => (a.date < b.date ? 1 : -1))
-      .map((a) => {
-        const seminar = seminarById(a.seminarId);
-        return [
-          formatDateDisplay(a.date),
-          seminar ? seminar.name : a.seminarId,
-          fmtHours(a.hours),
-          a.reason || "",
-          a.obligatory ? "Sí" : "No"
-        ].map(escapeCsv).join(";");
-      });
-    const csv = "﻿" + header.join(";") + "\n" + rows.join("\n") + "\n";
-    downloadBlob(csv, `faltas-${todayISO()}.csv`, "text/csv;charset=utf-8;");
-    markExported();
-  }
-
-  function deleteAll() {
-    if (absences.length === 0) return;
-    const ok = window.confirm("¿Seguro que quieres borrar todas las faltas? Esta acción no se puede deshacer.");
-    if (!ok) return;
-    absences = [];
-    saveAbsences(absences);
-    renderAll();
-    showToast("Se han borrado todas las faltas.", false);
-  }
-
-  function daysSince(isoDateTime) {
-    const then = new Date(isoDateTime).getTime();
-    if (isNaN(then)) return Infinity;
-    return (Date.now() - then) / (1000 * 60 * 60 * 24);
-  }
-
-  function renderDataSection() {
-    const lastExport = getLastExport();
-    const info = document.getElementById("lastExportInfo");
-    if (lastExport) {
-      const d = new Date(lastExport);
-      info.textContent = `Última copia exportada: ${d.toLocaleDateString("es-ES")} ${d.toLocaleTimeString("es-ES")}`;
-    } else {
-      info.textContent = "Última copia exportada: nunca.";
-    }
-
-    const warningEl = document.getElementById("backupWarning");
-    const needsBackup = absences.length > 0 && (!lastExport || daysSince(lastExport) > 14);
-    warningEl.innerHTML = needsBackup
-      ? `<div class="backup-warning">Hace más de 14 días que no exportas una copia (o nunca lo has hecho). Te recomendamos exportar un JSON o CSV por si borras el historial del navegador.</div>`
-      : "";
-  }
-
-  /* -------------------------------- compartir ----------------------------- */
+  /* --------------------------------- compartir -------------------------------- */
 
   async function handleShare() {
-    const url = location.href;
+    const url = location.href.split("#")[0];
     try {
-      if (navigator.share) {
-        await navigator.share({ title: document.title, url });
-        return;
-      }
-    } catch (e) { /* el usuario canceló o no está disponible: seguimos al fallback */ }
+      if (navigator.share) { await navigator.share({ title: "Mis faltas", url }); return; }
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+    }
     try {
       await navigator.clipboard.writeText(url);
-      showToast("Enlace copiado al portapapeles.", false);
+      showToast("Enlace copiado.", false);
     } catch (e) {
-      showToast("No se ha podido copiar el enlace automáticamente.", false);
+      showToast("No se ha podido copiar el enlace.", false);
     }
   }
 
-  /* --------------------------------- footer -------------------------------- */
-
-  function renderFooter() {
-    const footer = document.getElementById("siteFooter");
-    let repoLink = "";
-    if (location.hostname.endsWith("github.io")) {
-      const user = location.hostname.split(".")[0];
-      const repo = location.pathname.split("/").filter(Boolean)[0];
-      if (user && repo) {
-        repoLink = ` · <a href="https://github.com/${encodeURIComponent(user)}/${encodeURIComponent(repo)}">Ver código en GitHub</a>`;
-      }
-    }
-    footer.innerHTML = `Control de faltas de clase. Datos guardados solo en tu navegador.${repoLink}`;
-  }
-
-  /* --------------------------------- render global -------------------------- */
-
-  function renderAll() {
-    populateHistoryFilter();
-    renderSummary();
-    renderSeminars();
-    renderHistory();
-    renderDataSection();
-  }
-
-  /* ---------------------------------- eventos -------------------------------- */
+  /* ---------------------------------- eventos --------------------------------- */
 
   function attachEvents() {
-    document.getElementById("absenceForm").addEventListener("submit", handleFormSubmit);
-    document.getElementById("seminarSelect").addEventListener("change", () => { toggleObligatoryField(); updatePreview(); });
-    document.getElementById("hoursInput").addEventListener("input", updatePreview);
-    document.getElementById("dateInput").addEventListener("input", updatePreview);
-    document.getElementById("obligatoryFieldset").addEventListener("change", updatePreview);
-    document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+    document.getElementById("addBtn").addEventListener("click", () => openSheetForNew());
+    document.querySelectorAll("[data-nav]").forEach((b) => b.addEventListener("click", () => goTo(b.getAttribute("data-nav"))));
+    window.addEventListener("hashchange", applyView);
+    window.addEventListener("popstate", applyView);
+    document.getElementById("seeAllBtn").addEventListener("click", () => { historyFilter = ""; renderHistory(); goTo("history"); });
 
-    document.querySelectorAll("[data-quick]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        document.getElementById("hoursInput").value = btn.getAttribute("data-quick");
-        updatePreview();
-      });
+    document.getElementById("moduleFilter").addEventListener("click", (e) => {
+      const b = e.target.closest("[data-module]");
+      if (!b) return;
+      moduleFilter = b.getAttribute("data-module");
+      saveUi();
+      renderModuleFilter();
+      renderModules();
     });
 
-    document.getElementById("seminarsContainer").addEventListener("click", (e) => {
-      const link = e.target.closest("[data-filter-seminar]");
-      if (!link) return;
-      e.preventDefault();
-      const id = link.getAttribute("data-filter-seminar");
-      document.getElementById("historyFilterSelect").value = id;
+    document.getElementById("modules").addEventListener("click", (e) => {
+      const t = e.target.closest("[data-seminar]");
+      if (!t) return;
+      historyFilter = t.getAttribute("data-seminar");
       renderHistory();
-      document.getElementById("history-section").scrollIntoView({ behavior: "smooth", block: "start" });
+      goTo("history");
     });
 
-    document.getElementById("historyFilterSelect").addEventListener("change", renderHistory);
+    const onRowClick = (e) => {
+      const r = e.target.closest("[data-edit]");
+      if (r) openSheetForEdit(r.getAttribute("data-edit"));
+    };
+    document.getElementById("recentList").addEventListener("click", onRowClick);
+    document.getElementById("historyList").addEventListener("click", onRowClick);
 
-    document.getElementById("historyContainer").addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-action]");
-      if (!btn) return;
-      const id = btn.getAttribute("data-id");
-      if (btn.getAttribute("data-action") === "edit") {
-        const absence = absences.find((a) => a.id === id);
-        if (absence) loadAbsenceIntoForm(absence);
-      } else if (btn.getAttribute("data-action") === "delete") {
-        deleteAbsence(id);
+    document.getElementById("homeAlerts").addEventListener("click", (e) => {
+      if (e.target.closest('[data-action="export"]')) exportJson();
+    });
+
+    document.getElementById("historyFilter").addEventListener("change", (e) => { historyFilter = e.target.value; renderHistory(); });
+
+    // Hoja
+    form.addEventListener("submit", handleSubmit);
+    form.addEventListener("change", (e) => {
+      if (e.target.name === "hoursQuick") document.getElementById("hoursInput").value = "";
+      if (e.target.name === "when" && e.target.value === "other" && !document.getElementById("dateInput").value) {
+        document.getElementById("dateInput").value = todayISO();
       }
+      updatePreview();
+      if (e.target.name === "reason" && e.target.value === OTHER_REASON) document.getElementById("reasonInput").focus();
+    });
+    document.getElementById("hoursInput").addEventListener("input", () => { setRadio("hoursQuick", ""); updatePreview(); });
+    document.getElementById("dateInput").addEventListener("input", updatePreview);
+    // Tocar un motivo ya elegido lo quita (es opcional).
+    document.getElementById("reasonChips").addEventListener("click", (e) => {
+      const input = e.target.closest("label") && e.target.closest("label").querySelector("input");
+      if (!input || e.target !== input) return;
+      if (input.dataset.wasChecked === "1") { input.checked = false; updatePreview(); }
+      form.querySelectorAll('input[name="reason"]').forEach((r) => { r.dataset.wasChecked = r.checked ? "1" : ""; });
+    });
+    document.getElementById("closeSheetBtn").addEventListener("click", () => closeDialog(sheet));
+    sheet.addEventListener("close", () => document.body.classList.remove("sheet-open"));
+    sheet.addEventListener("click", (e) => { if (e.target === sheet) closeDialog(sheet); });
+    document.getElementById("deleteOneBtn").addEventListener("click", () => {
+      const id = editingId;
+      closeDialog(sheet);
+      deleteAbsence(id);
     });
 
+    // Aviso
     document.getElementById("toastUndoBtn").addEventListener("click", undoDelete);
 
+    // Copias
     document.getElementById("exportJsonBtn").addEventListener("click", exportJson);
     document.getElementById("exportCsvBtn").addEventListener("click", exportCsv);
-    document.getElementById("deleteAllBtn").addEventListener("click", deleteAll);
     document.getElementById("importJsonBtn").addEventListener("click", () => document.getElementById("importJsonInput").click());
     document.getElementById("importJsonInput").addEventListener("change", (e) => {
       const file = e.target.files && e.target.files[0];
@@ -1132,25 +1425,39 @@
       e.target.value = "";
     });
 
+    // Borrar todo
+    const confirmDialog = document.getElementById("confirmDialog");
+    document.getElementById("deleteAllBtn").addEventListener("click", () => openDialog(confirmDialog));
+    document.getElementById("cancelDeleteAllBtn").addEventListener("click", () => closeDialog(confirmDialog));
+    confirmDialog.addEventListener("close", () => document.body.classList.remove("sheet-open"));
+    confirmDialog.addEventListener("click", (e) => { if (e.target === confirmDialog) closeDialog(confirmDialog); });
+    document.getElementById("confirmDeleteAllBtn").addEventListener("click", () => {
+      absences = [];
+      saveAbsences();
+      closeDialog(confirmDialog);
+      renderAll();
+      showToast("Se han borrado todas las faltas.", false);
+    });
+
     document.getElementById("shareBtn").addEventListener("click", handleShare);
 
+    // Otra pestaña con la web abierta ha cambiado los datos.
     window.addEventListener("storage", (e) => {
-      if (e.key === STORAGE_KEY) {
-        absences = loadAbsences();
-        renderAll();
-      }
+      if (e.key === STORAGE_KEY) { absences = loadAbsences(); renderAll(); }
     });
   }
 
   function init() {
+    document.getElementById("limitText").textContent = `Límite: ${Math.round(CONFIG.generalLimitPct * 100)} % por seminario`;
     absences = loadAbsences();
-    populateSeminarSelect();
-    document.getElementById("dateInput").value = todayISO();
+    loadUi();
+    populateSeminarOptions(document.getElementById("seminarSelect"), false);
+    populateSeminarOptions(document.getElementById("historyFilter"), true);
+    renderReasonChips();
     attachEvents();
-    toggleObligatoryField();
     renderAll();
-    updatePreview();
     renderFooter();
+    applyView();
   }
 
   document.addEventListener("DOMContentLoaded", init);
